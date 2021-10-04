@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { GetStaticProps } from 'next';
+import Header from '../components/Header';
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -24,13 +26,30 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default function Home({ postsPagination }: HomeProps) {
+  return (
+    <>
+      <Header />
+      <div>
+        {postsPagination.results.map(post => (
+          <div>{post.data.title}</div>
+        ))}
+      </div>
+    </>
+  );
+}
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient();
+  // const postsResponse = await prismic.query();
 
-//   // TODO
-// };
+  return {
+    props: {
+      postsPagination: {
+        next_page: false,
+        results: [],
+      },
+    },
+  };
+};
