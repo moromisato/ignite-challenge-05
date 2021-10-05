@@ -61,6 +61,11 @@ export default function Home({ postsPagination }: HomeProps) {
               </a>
             </Link>
           ))}
+          {postsPagination.next_page ?? (
+            <Link href="/">
+              <a className={styles.loadMoreButton}>Carregar mais posts</a>
+            </Link>
+          )}
         </div>
       </main>
     </>
