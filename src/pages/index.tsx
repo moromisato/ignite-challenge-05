@@ -39,7 +39,7 @@ export default function Home({ postsPagination }: HomeProps) {
         <div className={styles.posts}>
           {postsPagination.results.map(post => (
             <Link key={post.uid} href="/">
-              <div>
+              <a>
                 <strong className={styles.title}>{post.data.title}</strong>
                 <div className={styles.subtitle}>{post.data.subtitle}</div>
                 <div className={styles.iconsContainer}>
@@ -58,7 +58,7 @@ export default function Home({ postsPagination }: HomeProps) {
                     {post.data.author}
                   </div>
                 </div>
-              </div>
+              </a>
             </Link>
           ))}
         </div>
