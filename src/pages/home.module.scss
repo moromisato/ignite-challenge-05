@@ -1,1 +1,47 @@
-// TODO
+.container {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.posts {
+  max-width: 1120px;
+
+  a {
+    display: block;
+    & + a {
+      padding-top: 2rem;
+    }
+  }
+}
+
+.title {
+  font-size: 1.75rem;
+  line-height: 2.2rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  color: var(--body);
+}
+
+.iconsContainer {
+  display: flex;
+  flex-direction: row;
+  color: var(--body);
+
+  div {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+  }
+
+  .icon {
+    margin-right: 8px;
+  }
+}
+
+
