@@ -9,17 +9,20 @@
 
   a {
     display: block;
-    & + a {
-      padding-top: 2rem;
-    }
+    padding-bottom: 2rem;
   }
 }
 
 .loadMoreButton {
-  color: var(--highlight);
-  font-weight: 600;
-  font-size: 1.3rem;
-  margin-top: 2rem;
+  background: none;
+  border: 0px;
+
+  a {
+    color: var(--highlight);
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-top: 2rem;
+  }
 }
 
 .title {
