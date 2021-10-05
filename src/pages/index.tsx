@@ -5,6 +5,7 @@ import { FiCalendar, FiUser } from 'react-icons/fi';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import Link from 'next/link';
+import { useState } from 'react';
 import Header from '../components/Header';
 import { getPrismicClient } from '../services/prismic';
 
@@ -32,13 +33,28 @@ interface HomeProps {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function Home({ postsPagination }: HomeProps) {
+  const [posts, setPosts] = useState(postsPagination);
+
+  function handleLoadMore(): void {
+    fetch(postsPagination.next_page)
+      .then(response => response.json())
+      .then(data => {
+        setPosts(prev => {
+          return {
+            next_page: data.next_page,
+            results: [...prev.results, ...data.results],
+          };
+        });
+      });
+  }
+
   return (
     <>
       <Header />
       <main className={styles.container}>
         <div className={styles.posts}>
-          {postsPagination.results.map(post => (
-            <Link key={post.uid} href="/">
+          {posts.results.map(post => (
+            <Link key={post.uid} href={`/post/${post.uid}`}>
               <a>
                 <strong className={styles.title}>{post.data.title}</strong>
                 <div className={styles.subtitle}>{post.data.subtitle}</div>
@@ -61,10 +77,14 @@ export default function Home({ postsPagination }: HomeProps) {
               </a>
             </Link>
           ))}
-          {postsPagination.next_page ?? (
-            <Link href="/">
-              <a className={styles.loadMoreButton}>Carregar mais posts</a>
-            </Link>
+          {posts.next_page && (
+            <button
+              type="button"
+              onClick={handleLoadMore}
+              className={styles.loadMoreButton}
+            >
+              <a>Carregar mais posts</a>
+            </button>
           )}
         </div>
       </main>
@@ -77,7 +97,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const postsResponse = await prismic.query(
     [Prismic.predicates.at('document.type', 'post')],
     {
-      pageSize: 100,
+      pageSize: 1,
     }
   );
 
