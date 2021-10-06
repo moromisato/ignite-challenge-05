@@ -1,1 +1,39 @@
-// TODO
+.container {
+
+  img {
+    object-fit: contain;
+    height: 400px;
+    width: 100%;
+  }
+
+}
+
+.post {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+
+  strong {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 3.6rem;
+  }
+
+  .postDetails {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1.5rem;
+    color: var(--body);
+
+    div {
+      display: flex;
+      align-items: center;
+      margin-right: 1.5rem;
+    }
+
+    .icon {
+      margin-right: 8px;
+    }
+  }
+
+}
