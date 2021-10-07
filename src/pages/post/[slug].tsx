@@ -64,7 +64,7 @@ export default function Post({ post }: PostProps) {
       <Header />
       <main className={styles.container}>
         <img src={post.data.banner.url} alt={post.data.banner.url} />
-        <article className={styles.post}>
+        <article className={`${styles.post} ${commonStyles.defaultContainer}`}>
           <strong>{post.data.title}</strong>
           <div className={styles.postDetails}>
             <div>

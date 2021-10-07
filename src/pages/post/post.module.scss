@@ -1,11 +1,9 @@
 .container {
-
   img {
     object-fit: contain;
     height: 400px;
     width: 100%;
   }
-
 }
 
 .contentContainer {
@@ -28,9 +26,6 @@
 }
 
 .post {
-  max-width: 1120px;
-  width: 100%;
-  margin: 0 auto;
 
   strong {
     font-size: 3rem;
