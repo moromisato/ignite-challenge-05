@@ -1,9 +1,12 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/no-danger */
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { RichText } from 'prismic-dom';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 import Prismic from '@prismicio/client';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import { getPrismicClient } from '../../services/prismic';
 
@@ -35,12 +38,25 @@ interface PostProps {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function Post({ post }: PostProps) {
-  function calculateReadTime(): string {
-    post.data.content.map(content => {
-      console.log(content);
-    });
+  const router = useRouter();
 
-    return '4 minutos';
+  if (router.isFallback) {
+    return <div>Carregando...</div>;
+  }
+
+  function calculateReadTime(): string {
+    const HUMAN_WORDS_PER_MINUTE = 200;
+
+    const wordCount = post.data.content.reduce((acc, content) => {
+      const body = RichText.asText(content.body);
+      const splittedBody = body.split(' ');
+      acc += splittedBody.length;
+      return acc;
+    }, 0);
+
+    const readTime = Math.ceil(wordCount / HUMAN_WORDS_PER_MINUTE);
+
+    return `${readTime} min`;
   }
 
   return (
@@ -66,6 +82,19 @@ export default function Post({ post }: PostProps) {
               {calculateReadTime()}
             </div>
           </div>
+          {post.data.content.map(content => {
+            return (
+              <div key={content.heading} className={styles.contentContainer}>
+                <div className={styles.contentTitle}>{content.heading}</div>
+                <div
+                  className={styles.postContent}
+                  dangerouslySetInnerHTML={{
+                    __html: RichText.asHtml(content.body),
+                  }}
+                />
+              </div>
+            );
+          })}
         </article>
       </main>
     </>
