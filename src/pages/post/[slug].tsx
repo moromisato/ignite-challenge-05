@@ -17,6 +17,7 @@ import Comments from '../../components/Comments';
 interface Post {
   uid: string;
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     subtitle: string;
@@ -60,6 +61,18 @@ export default function Post({ post }: PostProps) {
     return `${readTime} min`;
   }
 
+  function renderLastPublishDateLabel(): string {
+    return `
+      ${format(
+        new Date(post.last_publication_date),
+        "'* editado em' dd 'de' MMMM', às ' HH:mm'",
+        {
+          locale: ptBR,
+        }
+      )}
+    `;
+  }
+
   return (
     <>
       <Header />
@@ -82,6 +95,9 @@ export default function Post({ post }: PostProps) {
               <FiClock className={styles.icon} size={20} />
               {calculateReadTime()}
             </div>
+          </div>
+          <div className={styles.lastPublishDateLabel}>
+            {renderLastPublishDateLabel()}
           </div>
           {post.data.content.map(content => {
             return (
@@ -137,6 +153,7 @@ export const getStaticProps: GetStaticProps = async context => {
   const post: Post = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
+    last_publication_date: response.last_publication_date,
     data: {
       title: response.data.title,
       subtitle: response.data.subtitle,
