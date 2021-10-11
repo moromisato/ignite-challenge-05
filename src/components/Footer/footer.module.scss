@@ -1,0 +1,24 @@
+.footer {
+  max-width: 720px;
+  margin: 0 auto;
+  margin-bottom: 5rem;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.controlButton {
+
+  .title {
+    font-size: 1.125rem;
+    color: var(--heading);
+  }
+
+  .controlLabel {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--highlight);
+  }
+}
+
+
