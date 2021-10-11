@@ -1,4 +1,3 @@
-import { repoName } from 'prismic-configuration';
 // utils/useUpdatePreviewRef.js
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
