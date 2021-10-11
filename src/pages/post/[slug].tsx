@@ -13,6 +13,7 @@ import { getPrismicClient } from '../../services/prismic';
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 import Comments from '../../components/Comments';
+import { Footer } from '../../components/Footer';
 
 interface Post {
   uid: string;
@@ -113,6 +114,7 @@ export default function Post({ post }: PostProps) {
             );
           })}
         </article>
+        <Footer previousPost="teste" nextPost="teste2" />
         <Comments />
       </main>
     </>
