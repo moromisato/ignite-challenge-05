@@ -56,7 +56,7 @@ export default function Home({ postsPagination, preview }: HomeProps) {
       <Header />
       <main className={`${commonStyles.defaultContainer}`}>
         <div className={`${styles.posts} ${commonStyles.defaultContainer}`}>
-          {posts.results.map(post => (
+          {posts.results.map((post, index) => (
             <Link key={post.uid} href={`/post/${post.uid}`}>
               <a>
                 <strong className={styles.title}>{post.data.title}</strong>
@@ -120,8 +120,8 @@ export const getStaticProps: GetStaticProps<HomeProps> = async ({
       postsPagination: {
         next_page: postsResponse.next_page,
         results: postsResponse.results,
-        preview,
       },
+      preview,
     },
   };
 };

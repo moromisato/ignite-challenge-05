@@ -36,11 +36,17 @@ interface Post {
 }
 
 interface PostProps {
-  post: Post;
+  currentPost: Post;
+  nextPost: Post;
+  previousPost: Post;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export default function Post({ post }: PostProps) {
+export default function Post({
+  currentPost,
+  previousPost,
+  nextPost,
+}: PostProps) {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -50,7 +56,7 @@ export default function Post({ post }: PostProps) {
   function calculateReadTime(): string {
     const HUMAN_WORDS_PER_MINUTE = 200;
 
-    const wordCount = post.data.content.reduce((acc, content) => {
+    const wordCount = currentPost.data.content.reduce((acc, content) => {
       const body = RichText.asText(content.body);
       const splittedBody = body.split(' ');
       acc += splittedBody.length;
@@ -65,7 +71,7 @@ export default function Post({ post }: PostProps) {
   function renderLastPublishDateLabel(): string {
     return `
       ${format(
-        new Date(post.last_publication_date),
+        new Date(currentPost.last_publication_date),
         "'* editado em' dd 'de' MMMM', às ' HH:mm'",
         {
           locale: ptBR,
@@ -78,19 +84,26 @@ export default function Post({ post }: PostProps) {
     <>
       <Header />
       <main className={styles.container}>
-        <img src={post.data.banner.url} alt={post.data.banner.url} />
+        <img
+          src={currentPost.data.banner.url}
+          alt={currentPost.data.banner.url}
+        />
         <article className={`${styles.post} ${commonStyles.defaultContainer}`}>
-          <strong>{post.data.title}</strong>
+          <strong>{currentPost.data.title}</strong>
           <div className={styles.postDetails}>
             <div>
               <FiCalendar className={styles.icon} size={20} />
-              {format(new Date(post.first_publication_date), 'dd MMM yyyy', {
-                locale: ptBR,
-              })}
+              {format(
+                new Date(currentPost.first_publication_date),
+                'dd MMM yyyy',
+                {
+                  locale: ptBR,
+                }
+              )}
             </div>
             <div>
               <FiUser className={styles.icon} size={20} />
-              {post.data.author}
+              {currentPost.data.author}
             </div>
             <div>
               <FiClock className={styles.icon} size={20} />
@@ -100,7 +113,7 @@ export default function Post({ post }: PostProps) {
           <div className={styles.lastPublishDateLabel}>
             {renderLastPublishDateLabel()}
           </div>
-          {post.data.content.map(content => {
+          {currentPost.data.content.map(content => {
             return (
               <div key={content.heading} className={styles.contentContainer}>
                 <div className={styles.contentTitle}>{content.heading}</div>
@@ -114,7 +127,7 @@ export default function Post({ post }: PostProps) {
             );
           })}
         </article>
-        <Footer previousPost="teste" nextPost="teste2" />
+        <Footer previousPost={previousPost} nextPost={nextPost} />
         <Comments />
       </main>
     </>
@@ -152,6 +165,9 @@ export const getStaticProps: GetStaticProps = async context => {
 
   const response = await prismic.getByUID('post', String(slug), {});
 
+  let postAfter = null;
+  let postBefore = null;
+
   const post: Post = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
@@ -165,9 +181,53 @@ export const getStaticProps: GetStaticProps = async context => {
     },
   };
 
+  const postAfterResponse = await prismic.query(
+    [
+      Prismic.predicates.dateAfter(
+        'document.first_publication_date',
+        post.first_publication_date
+      ),
+    ],
+    {
+      pageSize: 1,
+    }
+  );
+
+  if (postAfterResponse.results[0]) {
+    postAfter = {
+      uid: postAfterResponse.results[0].uid,
+      data: {
+        title: postAfterResponse.results[0].data.title,
+      },
+    };
+  }
+
+  const postBeforeResponse = await prismic.query(
+    [
+      Prismic.predicates.dateBefore(
+        'document.first_publication_date',
+        post.first_publication_date
+      ),
+    ],
+    {
+      pageSize: 1,
+    }
+  );
+
+  if (postBeforeResponse.results[0]) {
+    postBefore = {
+      uid: postBeforeResponse.results[0].uid,
+      data: {
+        title: postBeforeResponse.results[0].data.title,
+      },
+    };
+  }
+
   return {
     props: {
-      post,
+      nextPost: postAfter,
+      currentPost: post,
+      previousPost: postBefore,
     },
     redirect: 60 * 30, // 30 minutes
   };

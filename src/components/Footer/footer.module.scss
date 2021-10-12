@@ -11,9 +11,12 @@
 
 .controlButton {
 
+  cursor: pointer;
+
   .title {
     font-size: 1.125rem;
     color: var(--heading);
+    margin-bottom: 0.5rem;
   }
 
   .controlLabel {
