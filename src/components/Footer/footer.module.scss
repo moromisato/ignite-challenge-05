@@ -1,10 +1,12 @@
 .footer {
   max-width: 720px;
   margin: 0 auto;
-  margin-bottom: 5rem;
+  margin-bottom: 2.5rem;
   display: flex;
   justify-content: space-between;
 
+  padding-top: 2.5rem;
+  border-top: 1px solid #2c2f35;
 }
 
 .controlButton {
